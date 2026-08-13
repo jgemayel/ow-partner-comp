@@ -494,9 +494,29 @@
   .sf .sf-note { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
   @media (max-width: 520px) { .seg .sg-name { display: none; } .sf .sf-note { display: none; } }
 
+  /* ---------- surviving ---------- */
+  .surv-card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 24px; margin-bottom: 14px; }
+  .surv-card h4 { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 10px; }
+  .surv-card p { color: var(--muted); font-size: 13.5px; margin-bottom: 10px; }
+  .surv-card p strong { color: var(--ink); font-weight: 600; }
+  .surv-bar-wrap { margin-top: 38px; }
+  .surv-bar { position: relative; height: 24px; border-radius: 5px; background: #EAF3FA; display: flex; border: 1px solid var(--line); }
+  .sb-seg { height: 100%; }
+  .sb-red { background: #F6DCD5; border-radius: 4px 0 0 4px; }
+  .sb-amb { background: #FBEED6; }
+  .sb-tick { position: absolute; top: -5px; bottom: -5px; width: 3px; background: var(--ink); }
+  .sb-cursor { position: absolute; top: -28px; transform: translateX(-50%); }
+  .sb-cursor span { font-family: 'IBM Plex Mono', monospace; font-size: 10px; background: var(--blue-dark); color: #fff; padding: 2px 6px; border-radius: 3px; white-space: nowrap; }
+  .sb-cursor::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); top: 100%; border: 5px solid transparent; border-top-color: var(--blue-dark); }
+  .surv-scale { display: flex; justify-content: space-between; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: #9AA8B1; margin-top: 6px; }
+  .surv-labels { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; }
+  .surv-labels .sl-red { color: #8F3A28; }
+  .surv-labels .sl-amb { color: #7A5B14; }
+  .surv-labels .sl-blue { color: var(--blue-dark); }
+
   /* ---------- sensitivity grid ---------- */
   .sens-card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 24px; overflow-x: auto; }
-  .sens-table { border-collapse: collapse; width: 100%; min-width: 560px; font-family: 'IBM Plex Mono', monospace; }
+  .sens-table { border-collapse: collapse; width: 100%; min-width: 780px; font-family: 'IBM Plex Mono', monospace; }
   .sens-table th, .sens-table td { padding: 8px 6px; text-align: center; font-size: 12px; border: 1px solid #EDF1F4; }
   .sens-table th { background: #F0F3F5; font-weight: 600; font-size: 11px; color: var(--ink); white-space: nowrap; }
   .sens-table td.neg { background: #F6DCD5; color: #8F3A28; }
@@ -504,6 +524,8 @@
   .sens-table td.ok { background: #EAF3FA; color: var(--blue-dark); }
   .sens-table td.vest { background: #CFE7F5; color: var(--ink); font-weight: 600; }
   .sens-table td.cur { outline: 2px solid var(--ink); outline-offset: -2px; }
+  .sens-table td.sline { border-left: 3px solid var(--ink); }
+  .sens-table td.minc { background: #F0F3F5; font-weight: 600; color: var(--ink); white-space: nowrap; }
   .sens-legend { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--muted); }
   .sens-legend span { display: inline-flex; align-items: center; gap: 6px; }
   .sens-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
@@ -802,8 +824,29 @@
     </div>
   </div>
 
-  <div class="sec-title">Sensitivities, PVA vs SCR</div>
-  <p class="sec-sub">Bonus in $K across PVA margins and SCR, where SCR means net revenue (no contractors). The grid reprices live off the multiplier, FI level, pool and draw settings above.</p>
+  <div class="sec-title">Surviving</div>
+  <p class="sec-sub">What it takes to keep the seat, and the sensitivity that shows it. SCR means net revenue (no contractors). Everything here reprices live off the multiplier, FI level, pool and draw settings above.</p>
+
+  <div class="surv-card">
+    <h4>Two floors decide whether you keep the seat</h4>
+    <p><strong>Floor 1, the flag.</strong> Total credits &times; multiplier falls short of the draw and the bonus goes negative. No bonus, a formal flag, a partner-level PIP, recover within 1 to 2 years or you are out. At baseline assumptions that is SCR below ~$735K.</p>
+    <p><strong>Floor 2, the survival line.</strong> Your own generation, 100% of your credits &times; the multiplier with the pool excluded from both sides, must cover your draw. At 40% PVA in a 75% year that is ~$1.18M of SCR. Priced for a weak year, 30% PVA at 60%, it becomes the ~$2M partners quote.</p>
+    <p><strong>Between the floors sits the trap zone</strong>, amber below and in the grid. Cash positive, still not paying your way, and the partnership notices long before the math does.</p>
+    <div class="surv-bar-wrap">
+      <div class="surv-bar">
+        <div class="sb-seg sb-red" id="sbRed"></div>
+        <div class="sb-seg sb-amb" id="sbAmb"></div>
+        <div class="sb-tick" id="sbTick"></div>
+        <div class="sb-cursor" id="sbCursor"><span id="sbYou">You, $2M</span></div>
+      </div>
+      <div class="surv-scale"><span>$0</span><span>$1M</span><span>$2M</span><span>$3M</span></div>
+      <div class="surv-labels">
+        <span class="sl-red" id="sbFloor1">Flagged below $735K</span>
+        <span class="sl-amb" id="sbFloor2">Survival line $1.18M</span>
+        <span class="sl-blue">Surviving beyond</span>
+      </div>
+    </div>
+  </div>
 
   <div class="sens-card">
     <table class="sens-table" id="sensTable"></table>
@@ -812,6 +855,8 @@
       <span><i style="background:#FBEED6"></i>Positive but below survival</span>
       <span><i style="background:#EAF3FA"></i>Clean</span>
       <span><i style="background:#CFE7F5"></i>Vesting, above $750K</span>
+      <span><i style="background:#fff;border:1px solid #D9E0E5;border-left:3px solid #101F2C;border-radius:0"></i>Survival line crossing</span>
+      <span>Min SCR col = draw &divide; (PVA &times; mult)</span>
     </div>
   </div>
 
@@ -987,8 +1032,13 @@
     return Math.round(n / 1000).toLocaleString('en-US') + 'K cr';
   }
 
-  var sensScr = [500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000];
+  var sensScr = [500000, 750000, 1000000, 1250000, 1500000, 1750000, 2000000, 2500000, 3000000, 4000000, 5000000];
   var sensPva = [55, 45, 40, 37, 30, 20];
+
+  function fmtM(v) {
+    if (!isFinite(v)) return 'n/a';
+    return v >= 1000000 ? '$' + (Math.round(v / 10000) / 100) + 'M' : '$' + Math.round(v / 1000) + 'K';
+  }
 
   function buildSens() {
     var tbl = $('sensTable');
@@ -1000,22 +1050,49 @@
     var ri = 0, rbest = Infinity;
     sensPva.forEach(function (pv, i) { var d = Math.abs(pv - state.pva); if (d < rbest) { rbest = d; ri = i; } });
 
-    var html = '<tr><th>PVA \\ SCR</th>';
-    sensScr.forEach(function (sv) { html += '<th>$' + (sv / 1000000) + 'M</th>'; });
-    html += '</tr>';
+    var html = '<tr><th>PVA \ SCR</th>';
+    sensScr.forEach(function (sv) { html += '<th>' + (sv >= 1000000 ? '$' + (sv / 1000000) + 'M' : '$' + (sv / 1000) + 'K') + '</th>'; });
+    html += '<th>Min SCR</th></tr>';
     sensPva.forEach(function (pv, r) {
+      var surv = state.draw / ((pv / 100) * mult);
+      var sIdx = -1;
+      for (var i = 0; i < sensScr.length; i++) { if (sensScr[i] >= surv) { sIdx = i; break; } }
       html += '<tr><th>' + pv + '%</th>';
       sensScr.forEach(function (sv, c) {
         var personal = sv * (pv / 100) * 0.5;
         var bonus = (personal + pool) * mult - state.draw;
         var own = sv * (pv / 100) * mult;
         var cls = bonus < 0 ? 'neg' : (own < state.draw ? 'warn' : (bonus > 750000 ? 'vest' : 'ok'));
+        if (c === sIdx) cls += ' sline';
         if (r === ri && c === ci) cls += ' cur';
         html += '<td class="' + cls + '">' + Math.round(bonus / 1000) + '</td>';
       });
-      html += '</tr>';
+      html += '<td class="minc">' + fmtM(surv) + '</td></tr>';
     });
     tbl.innerHTML = html;
+  }
+
+  function buildSurvBar() {
+    var red = $('sbRed');
+    if (!red) return;
+    var mult = state.mult / 100, pva = state.pva / 100;
+    var pool = state.poolBase * (fiUnits[state.fi] / fiUnits[0]);
+    var MAX = 3000000;
+    var arith = pva > 0 ? Math.max(0, (state.draw / mult - pool) / (pva * 0.5)) : Infinity;
+    var surv = pva > 0 ? state.draw / (pva * mult) : Infinity;
+    var a = Math.min(arith, MAX);
+    red.style.width = (a / MAX * 100) + '%';
+    $('sbAmb').style.width = (Math.max(0, Math.min(surv, MAX) - a) / MAX * 100) + '%';
+    $('sbTick').style.left = (Math.min(surv, MAX) / MAX * 100) + '%';
+    $('sbCursor').style.left = (Math.min(state.scr, MAX) / MAX * 100) + '%';
+    $('sbYou').textContent = 'You, ' + fmtM(state.scr);
+    if (!isFinite(surv)) {
+      $('sbFloor1').textContent = 'Flagged at 0% PVA';
+      $('sbFloor2').textContent = 'Survival line n/a';
+    } else {
+      $('sbFloor1').textContent = arith === 0 ? 'Never flagged at this pool' : 'Flagged below ' + fmtM(arith);
+      $('sbFloor2').textContent = 'Survival line ' + fmtM(surv);
+    }
   }
 
   function recalc() {
@@ -1059,6 +1136,7 @@
     bonusEl.classList.toggle('negative', bonus < 0);
 
     buildSens();
+    buildSurvBar();
 
     if (bonus < 0) {
       statusEl.className = 'status-chip flag';
