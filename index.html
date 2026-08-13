@@ -535,11 +535,11 @@
     <div class="stage-body">
       <div class="stage-tag">Step 2 · PVA</div>
       <h3>Profitability, not revenue</h3>
-      <p>SCR converts to PVA based on project profitability. <strong>Around 40% is typical.</strong> This is the number that actually feeds your credits.</p>
+      <p>PVA is computed in the costing tool as <strong>net revenue (invoiced minus pass-through expenses), minus an 18% net revenue charge to the firm, minus execution charges</strong>, the team's time at internal cost rates &times; 50% (only 20% for DI/VP levels). So PVA margin = 82% minus execution charges over net revenue, and 82% is its theoretical ceiling. Historical quintiles run 55 / 50 / 45 / 37, pricing targets 36%, so ~40% is a fair working number.</p>
     </div>
     <div class="stage-ledger">
-      <div class="lrow"><span class="k">SCR</span><span class="v">$2,000,000</span></div>
-      <div class="lrow"><span class="k">Profitability</span><span class="v">&times; 40%</span></div>
+      <div class="lrow"><span class="k">SCR (net revenue)</span><span class="v">$2,000,000</span></div>
+      <div class="lrow"><span class="k">PVA margin</span><span class="v">&times; 40%</span></div>
       <div class="lrow result"><span class="k">PVA</span><span class="v">$800,000</span></div>
     </div>
   </div>
@@ -549,7 +549,7 @@
     <div class="stage-body">
       <div class="stage-tag">Step 3 · The 50/50</div>
       <h3>Half yours, half the pool's</h3>
-      <p>PVA splits evenly. Half stays with you as <strong>personal credits</strong>. Half funds the <strong>partner pool</strong>, which redistributes by seniority. Credits are an internal unit, not dollars. Nothing becomes money until the very end.</p>
+      <p>PVA splits evenly. Half stays with you as <strong>DPC Development Credits</strong>, your personal credits. Half funds the pool as <strong>Franchise Impact Credits</strong>, which redistribute by seniority. Credits are an internal unit, not dollars. Nothing becomes money until the very end.</p>
     </div>
     <div class="stage-ledger">
       <div class="lrow"><span class="k">PVA</span><span class="v">$800,000</span></div>
@@ -567,12 +567,12 @@
       <div class="src">
         <div class="s-tag">Personal Credits</div>
         <div class="s-val">400K cr</div>
-        <div class="s-sub">Your half of PVA. Moves with your selling.</div>
+        <div class="s-sub">DPC Development Credits. Your half of PVA, moves with your selling.</div>
       </div>
       <div class="src">
         <div class="s-tag">Billed Days</div>
         <div class="s-val">0 cr</div>
-        <div class="s-sub">Usually zero. Settled through splits instead.</div>
+        <div class="s-sub">DPC Execution Credits. Usually zero, settled through splits.</div>
       </div>
       <div class="src pool">
         <div class="s-tag">Pool Credits</div>
@@ -713,7 +713,8 @@
           <label for="pva">PVA rate</label>
           <span class="ctl-val" id="pvaVal">40%</span>
         </div>
-        <input type="range" id="pva" min="30" max="50" step="1" value="40">
+        <input type="range" id="pva" min="0" max="65" step="1" value="40">
+        <div class="ctl-note">= 82% minus execution charges / net revenue. Quintiles 55 / 50 / 45 / 37, ceiling 82%.</div>
       </div>
       <div class="ctl">
         <div class="ctl-head">
@@ -889,7 +890,7 @@
   </div>
 
   <div class="fineprint">
-    Worked example only. Assumes 50% splits, 40% PVA, 80% multiplier, FI1 pool distribution of ~325K credits (range 300-350K), higher levels scaled by FI units (30 / 45 / 90 / 135 / 180), glide paths shown at full bracket value. Pool distributions vary with region, practice and global performance, not personal contribution. Unit values derived, indicative. Survival modeled as own project credits at full value (before the 50/50 split, pool excluded) times the multiplier covering the draw. All figures indicative.
+    Worked example only. Assumes 50% splits, 40% PVA, 80% multiplier, FI1 pool distribution of ~325K credits (range 300-350K), higher levels scaled by FI units (30 / 45 / 90 / 135 / 180), glide paths shown at full bracket value. Pool distributions vary with region, practice and global performance, not personal contribution. Unit values derived, indicative. Survival modeled as own project credits at full value (before the 50/50 split, pool excluded) times the multiplier covering the draw. PVA mechanics per the OW costing tool. DPC Investment Credits for investment-flagged phases exist but are excluded here. All figures indicative.
   </div>
 
 </div>
