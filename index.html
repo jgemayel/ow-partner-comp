@@ -735,6 +735,7 @@
     <div class="calc-out">
       <div class="orow"><span class="ok">Personal credits</span><span class="ov" id="oPersonal">400K cr</span></div>
       <div class="orow"><span class="ok">Pool credits</span><span class="ov" id="oPool">325K cr</span></div>
+      <div class="orow"><span class="ok">Net pool position</span><span class="ov" id="oNet">+75K cr</span></div>
       <div class="orow strong"><span class="ok">Total credits</span><span class="ov" id="oTotal">725K cr</span></div>
       <div class="orow"><span class="ok">&times; Multiplier</span><span class="ov" id="oMult">80%</span></div>
       <div class="orow strong allin"><span class="ok">All-in comp ($)</span><span class="ov" id="oAllin">$580,000</span></div>
@@ -810,8 +811,8 @@
       <p><strong>Your marginal take rate on SCR.</strong> Each extra dollar of SCR converts at 40% profitability, is halved into the pool, then multiplied at 80%. Selling $1 earns you 16 cents, in a good year. This excludes the pool entirely, since your pool draw does not move with your selling. The 16 cents stacks on top of a fixed base of roughly <strong>$260K</strong> of all-in comp for an FI1 and <strong>~$1.56M</strong> for an FI5 (pool credits &times; 80%), paid whether you sell or not. The draw then comes out of the combined total.</p>
     </div>
     <div class="insight">
-      <span class="big">~$590K</span>
-      <p><strong>The survival line, and it moves.</strong> At an 80% multiplier an FI1 needs about $590K of SCR to clear the draw. At a 60% multiplier the same line jumps to roughly $1.33M. The firm's year decides how hard your year has to be.</p>
+      <span class="big">~$2M</span>
+      <p><strong>The real survival line.</strong> Survival is not covering your salary. It is paying into the pool at least as much as you draw out. At FI1's ~325K credit draw, that means SCR &times; PVA &times; 50% must reach 325K, roughly $1.6M of SCR at 40% PVA and $2.2M at 30%. Hence the number partners quote, around $2M. The arithmetic floor where the bonus goes negative sits far lower, near $590K at an 80% multiplier, but clearing it while drawing more than you contribute makes you a subsidized partner. The partnership notices long before the math does.</p>
     </div>
     <div class="insight">
       <span class="big">&minus;40%</span>
@@ -887,7 +888,7 @@
   </div>
 
   <div class="fineprint">
-    Worked example only. Assumes 50% splits, 40% PVA, 80% multiplier, FI1 pool distribution of ~325K credits (range 300-350K), higher levels scaled by FI units (30 / 45 / 90 / 135 / 180), glide paths shown at full bracket value. Pool distributions vary with region, practice and global performance, not personal contribution. Unit values derived, indicative. All figures indicative.
+    Worked example only. Assumes 50% splits, 40% PVA, 80% multiplier, FI1 pool distribution of ~325K credits (range 300-350K), higher levels scaled by FI units (30 / 45 / 90 / 135 / 180), glide paths shown at full bracket value. Pool distributions vary with region, practice and global performance, not personal contribution. Unit values derived, indicative. Survival norm modeled as pool contribution at least equal to pool draw, per partner folklore, unverified. All figures indicative.
   </div>
 
 </div>
@@ -923,6 +924,7 @@
   function recalc() {
     var personal = state.scr * (state.pva / 100) * 0.5;
     var pool = state.poolBase * (fiUnits[state.fi] / fiUnits[0]);
+    var net = personal - pool;
     var total = personal + pool;
     var allin = total * (state.mult / 100);
     var bonus = allin - state.draw;
@@ -936,6 +938,9 @@
 
     $('oPersonal').textContent = fmtCr(personal);
     $('oPool').textContent = fmtCr(pool);
+    var netEl = $('oNet');
+    netEl.textContent = (net >= 0 ? '+' : '\u2212') + fmtCr(Math.abs(net));
+    netEl.style.color = net < 0 ? '#E8836B' : '#7FCBEE';
     $('oTotal').textContent = fmtCr(total);
     $('oMult').textContent = state.mult + '%';
     $('oAllin').textContent = fmtUSD(allin);
@@ -961,7 +966,7 @@
     } else {
       statusEl.className = 'status-chip ok';
       statusEl.textContent = 'CLEAN YEAR · ALL CASH';
-      vestEl.textContent = '';
+      vestEl.textContent = net < 0 ? 'Net pool taker. Contributing less than you draw. Below the survival norm.' : '';
     }
   }
 
