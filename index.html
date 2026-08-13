@@ -740,6 +740,7 @@
       <div class="orow strong allin"><span class="ok">All-in comp ($)</span><span class="ov" id="oAllin">$580,000</span></div>
       <div class="orow"><span class="ok">&minus; Draw already paid</span><span class="ov" id="oDraw">$354,000</span></div>
       <div class="orow"><span class="ok">Survival test, 100% own cr &times; mult</span><span class="ov" id="oOwn">$640,000</span></div>
+      <div class="orow"><span class="ok">Min SCR to survive</span><span class="ov" id="oMin">$1,110,000</span></div>
       <div class="bonus-block">
         <div class="b-lab">Bonus</div>
         <div class="b-num" id="oBonus">~$226,000</div>
@@ -822,7 +823,7 @@
 
   <div class="split-card">
     <h4>The only negotiated number</h4>
-    <div class="sp-sub">One $1M project on a code with three partners. Everything downstream of this line is formula.</div>
+    <div class="sp-sub">One $1M project on a code with three partners, illustrative. Partner C is where level 1 partners like us sit. In year one, even 20% is a win. Everything downstream of this line is formula.</div>
     <div class="split-bar">
       <div class="seg a" style="flex: 0 0 50%;">
         <span class="sg-name">Code Holder</span>
@@ -833,7 +834,7 @@
         <span class="sg-pct">30%</span>
       </div>
       <div class="seg c" style="flex: 0 0 20%;">
-        <span class="sg-name">Partner C</span>
+        <span class="sg-name">Partner C &middot; Us</span>
         <span class="sg-pct">20%</span>
       </div>
     </div>
@@ -941,6 +942,10 @@
     var ownEl = $('oOwn');
     ownEl.textContent = fmtUSD(ownGen);
     ownEl.style.color = ownGen < state.draw ? '#E8836B' : '#7FCBEE';
+    var minScr = Math.round(state.draw / ((state.pva / 100) * (state.mult / 100)) / 10000) * 10000;
+    var minEl = $('oMin');
+    minEl.textContent = fmtUSD(minScr);
+    minEl.style.color = state.scr < minScr ? '#E8836B' : '#EDF2F5';
     $('oTotal').textContent = fmtCr(total);
     $('oMult').textContent = state.mult + '%';
     $('oAllin').textContent = fmtUSD(allin);
