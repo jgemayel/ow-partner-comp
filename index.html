@@ -735,11 +735,11 @@
     <div class="calc-out">
       <div class="orow"><span class="ok">Personal credits</span><span class="ov" id="oPersonal">400K cr</span></div>
       <div class="orow"><span class="ok">Pool credits</span><span class="ov" id="oPool">325K cr</span></div>
-      <div class="orow"><span class="ok">Net pool position</span><span class="ov" id="oNet">+75K cr</span></div>
       <div class="orow strong"><span class="ok">Total credits</span><span class="ov" id="oTotal">725K cr</span></div>
       <div class="orow"><span class="ok">&times; Multiplier</span><span class="ov" id="oMult">80%</span></div>
       <div class="orow strong allin"><span class="ok">All-in comp ($)</span><span class="ov" id="oAllin">$580,000</span></div>
       <div class="orow"><span class="ok">&minus; Draw already paid</span><span class="ov" id="oDraw">$354,000</span></div>
+      <div class="orow"><span class="ok">Survival test, 100% own cr &times; mult</span><span class="ov" id="oOwn">$640,000</span></div>
       <div class="bonus-block">
         <div class="b-lab">Bonus</div>
         <div class="b-num" id="oBonus">~$226,000</div>
@@ -812,7 +812,7 @@
     </div>
     <div class="insight">
       <span class="big">~$2M</span>
-      <p><strong>The real survival line.</strong> Survival is not covering your salary. It is paying into the pool at least as much as you draw out. At FI1's ~325K credit draw, that means SCR &times; PVA &times; 50% must reach 325K, roughly $1.6M of SCR at 40% PVA and $2.2M at 30%. Hence the number partners quote, around $2M. The arithmetic floor where the bonus goes negative sits far lower, near $590K at an 80% multiplier, but clearing it while drawing more than you contribute makes you a subsidized partner. The partnership notices long before the math does.</p>
+      <p><strong>The survival line.</strong> Survival means your own projects cover your own salary, with the pool excluded from both sides of the equation. The test values your generation at 100% of credits, before the 50/50 split, then applies the multiplier. SCR &times; PVA &times; multiplier must cover the ~$354K draw. At 40% PVA in an 80% year that is ~$1.1M of SCR. At 30% PVA in a 60% year it is ~$2M, the number partners quote, effectively priced for a weak year. It sits well above the arithmetic floor near $590K where the bonus goes negative, so you can be cash positive and still below the line.</p>
     </div>
     <div class="insight">
       <span class="big">&minus;40%</span>
@@ -888,7 +888,7 @@
   </div>
 
   <div class="fineprint">
-    Worked example only. Assumes 50% splits, 40% PVA, 80% multiplier, FI1 pool distribution of ~325K credits (range 300-350K), higher levels scaled by FI units (30 / 45 / 90 / 135 / 180), glide paths shown at full bracket value. Pool distributions vary with region, practice and global performance, not personal contribution. Unit values derived, indicative. Survival norm modeled as pool contribution at least equal to pool draw, per partner folklore, unverified. All figures indicative.
+    Worked example only. Assumes 50% splits, 40% PVA, 80% multiplier, FI1 pool distribution of ~325K credits (range 300-350K), higher levels scaled by FI units (30 / 45 / 90 / 135 / 180), glide paths shown at full bracket value. Pool distributions vary with region, practice and global performance, not personal contribution. Unit values derived, indicative. Survival modeled as own project credits at full value (before the 50/50 split, pool excluded) times the multiplier covering the draw. All figures indicative.
   </div>
 
 </div>
@@ -924,7 +924,7 @@
   function recalc() {
     var personal = state.scr * (state.pva / 100) * 0.5;
     var pool = state.poolBase * (fiUnits[state.fi] / fiUnits[0]);
-    var net = personal - pool;
+    var ownGen = state.scr * (state.pva / 100) * (state.mult / 100);
     var total = personal + pool;
     var allin = total * (state.mult / 100);
     var bonus = allin - state.draw;
@@ -938,9 +938,9 @@
 
     $('oPersonal').textContent = fmtCr(personal);
     $('oPool').textContent = fmtCr(pool);
-    var netEl = $('oNet');
-    netEl.textContent = (net >= 0 ? '+' : '\u2212') + fmtCr(Math.abs(net));
-    netEl.style.color = net < 0 ? '#E8836B' : '#7FCBEE';
+    var ownEl = $('oOwn');
+    ownEl.textContent = fmtUSD(ownGen);
+    ownEl.style.color = ownGen < state.draw ? '#E8836B' : '#7FCBEE';
     $('oTotal').textContent = fmtCr(total);
     $('oMult').textContent = state.mult + '%';
     $('oAllin').textContent = fmtUSD(allin);
@@ -966,7 +966,7 @@
     } else {
       statusEl.className = 'status-chip ok';
       statusEl.textContent = 'CLEAN YEAR · ALL CASH';
-      vestEl.textContent = net < 0 ? 'Net pool taker. Contributing less than you draw. Below the survival norm.' : '';
+      vestEl.textContent = ownGen < state.draw ? 'Below the survival line. Own generation does not cover the draw.' : '';
     }
   }
 
