@@ -1002,10 +1002,15 @@
     var ownEl = $('oOwn');
     ownEl.textContent = fmtUSD(ownGen);
     ownEl.style.color = ownGen < state.draw ? '#E8836B' : '#7FCBEE';
-    var minScr = Math.round(state.draw / ((state.pva / 100) * (state.mult / 100)) / 10000) * 10000;
     var minEl = $('oMin');
-    minEl.textContent = fmtUSD(minScr);
-    minEl.style.color = state.scr < minScr ? '#E8836B' : '#EDF2F5';
+    if (state.pva === 0) {
+      minEl.textContent = 'n/a at 0% PVA';
+      minEl.style.color = '#E8836B';
+    } else {
+      var minScr = Math.round(state.draw / ((state.pva / 100) * (state.mult / 100)) / 10000) * 10000;
+      minEl.textContent = fmtUSD(minScr);
+      minEl.style.color = state.scr < minScr ? '#E8836B' : '#EDF2F5';
+    }
     $('oTotal').textContent = fmtCr(total);
     $('oMult').textContent = state.mult + '%';
     $('oAllin').textContent = fmtUSD(allin);
