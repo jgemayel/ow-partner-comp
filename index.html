@@ -434,6 +434,37 @@
   .insight p { color: var(--muted); font-size: 13.5px; }
   .insight p strong { color: var(--ink); font-weight: 600; }
 
+  /* ---------- split schematic ---------- */
+  .split-card {
+    margin-top: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px;
+  }
+  .split-card h4 { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .split-card .sp-sub { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+  .split-bar { display: flex; height: 48px; border-radius: 6px; overflow: hidden; }
+  .seg { display: flex; flex-direction: column; justify-content: center; text-align: center; font-family: 'IBM Plex Mono', monospace; }
+  .seg .sg-name { font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; opacity: .75; }
+  .seg .sg-pct { font-size: 14px; font-weight: 600; }
+  .seg.a { background: var(--ink); color: #EDF2F5; }
+  .seg.b { background: var(--blue); color: #fff; }
+  .seg.c { background: #A8CFE6; color: var(--ink); }
+  .split-flow { display: flex; margin-top: 0; }
+  .sf { text-align: center; }
+  .sf .sf-line { width: 2px; height: 20px; background: var(--rail); margin: 0 auto 6px; position: relative; }
+  .sf .sf-line::after {
+    content: '';
+    position: absolute; bottom: -1px; left: -3px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid var(--rail);
+  }
+  .sf .sf-scr { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 13px; }
+  .sf .sf-note { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+  @media (max-width: 520px) { .seg .sg-name { display: none; } .sf .sf-note { display: none; } }
+
   .readnote { margin-top: 40px; border-left: 3px solid var(--ink); padding: 4px 0 4px 18px; }
   .readnote .rn-tag {
     font-family: 'IBM Plex Mono', monospace;
@@ -785,6 +816,45 @@
     <div class="insight">
       <span class="big">&minus;40%</span>
       <p><strong>The multiplier taxes everything.</strong> Because pool distributions are credits, a Europe-style 60% year hits your entire comp, pool included. The same 725K credits pay ~$226K of bonus in an 80% region and ~$81K in a 60% one. Geography is a comp decision.</p>
+    </div>
+  </div>
+
+  <div class="split-card">
+    <h4>The only negotiated number</h4>
+    <div class="sp-sub">One $1M project on a code with three partners. Everything downstream of this line is formula.</div>
+    <div class="split-bar">
+      <div class="seg a" style="flex: 0 0 50%;">
+        <span class="sg-name">Code Holder</span>
+        <span class="sg-pct">50%</span>
+      </div>
+      <div class="seg b" style="flex: 0 0 30%;">
+        <span class="sg-name">Partner B</span>
+        <span class="sg-pct">30%</span>
+      </div>
+      <div class="seg c" style="flex: 0 0 20%;">
+        <span class="sg-name">Partner C</span>
+        <span class="sg-pct">20%</span>
+      </div>
+    </div>
+    <div class="split-flow">
+      <div class="sf" style="flex: 0 0 50%;">
+        <div class="sf-line"></div>
+        <div class="sf-scr">$500K SCR</div>
+        <div class="sf-note">Into their own credit account</div>
+      </div>
+      <div class="sf" style="flex: 0 0 30%;">
+        <div class="sf-line"></div>
+        <div class="sf-scr">$300K SCR</div>
+        <div class="sf-note">Into their own credit account</div>
+      </div>
+      <div class="sf" style="flex: 0 0 20%;">
+        <div class="sf-line"></div>
+        <div class="sf-scr">$200K SCR</div>
+        <div class="sf-note">Into their own credit account</div>
+      </div>
+    </div>
+    <div class="keybox">
+      <strong>Why the splits conversation is the comp conversation.</strong> The split is the only number in the entire system that is negotiated rather than calculated. The code holder holds the pen, alignment happens partner to partner, and splits can be reopened ex-post. Win here and the 16 cent machine works for you all year. Lose here and no amount of delivery gets it back, since billed days pay zero.
     </div>
   </div>
 
