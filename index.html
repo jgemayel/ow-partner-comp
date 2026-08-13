@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where the Money Goes | OW Partner Compensation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F3F5F7;
+    --card: #FFFFFF;
+    --ink: #101F2C;
+    --muted: #5C6B76;
+    --blue: #0E7FC0;
+    --blue-dark: #0A5E8F;
+    --red: #B5432C;
+    --line: #D9E0E5;
+    --rail: #C3CDD4;
+    --credit-bg: #F0F6FA;
+    --credit-border: #C9DFEC;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 56px 24px 80px; }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: clamp(30px, 5vw, 44px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .lede { color: var(--muted); max-width: 590px; font-size: 16px; }
+
+  /* ---------- hero ---------- */
+  .hero-ledger {
+    margin: 36px 0 8px;
+    background: var(--ink);
+    color: #EDF2F5;
+    border-radius: 10px;
+    padding: 26px 28px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hero-item { flex: 1; min-width: 150px; }
+  .hero-item .lab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8FA3B0;
+    margin-bottom: 6px;
+  }
+  .hero-item .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(20px, 3.4vw, 30px);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .hero-item .num.blue { color: #4FB6E8; }
+  .hero-arrow { display: flex; align-items: center; color: #4A5D6A; font-size: 22px; font-family: 'IBM Plex Mono', monospace; }
+  .hero-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+    margin: 10px 2px 0;
+  }
+
+  .sec-title {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: -0.01em;
+    margin: 52px 0 6px;
+  }
+  .sec-sub { color: var(--muted); margin-bottom: 22px; max-width: 640px; }
+
+  /* ---------- pipeline ---------- */
+  .stage {
+    display: grid;
+    grid-template-columns: 1fr 268px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .connector {
+    width: 2px; height: 26px;
+    background: var(--rail);
+    margin-left: 40px;
+    position: relative;
+  }
+  .connector::after {
+    content: '';
+    position: absolute; bottom: -1px; left: -3px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid var(--rail);
+  }
+  .stage-body { padding: 22px 26px 24px; }
+  .stage-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--blue-dark);
+    margin-bottom: 8px;
+  }
+  .stage h3 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 17.5px;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .stage p { color: var(--muted); font-size: 14px; }
+  .stage p strong { color: var(--ink); font-weight: 600; }
+
+  .stage-ledger {
+    background: #F7FAFC;
+    border-left: 1px solid var(--line);
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 7px;
+  }
+  .lrow {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+  }
+  .lrow .k { color: var(--muted); font-size: 11px; }
+  .lrow .v { font-weight: 500; }
+  .lrow.result { border-top: 1px solid var(--line); padding-top: 8px; margin-top: 3px; }
+  .lrow.result .v { color: var(--blue-dark); font-weight: 600; font-size: 15px; }
+  .lrow.result .k { color: var(--ink); font-weight: 500; }
+
+  /* ---------- credit account schematic ---------- */
+  .schematic {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 30px 28px 26px;
+  }
+  .flow-sources { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .src {
+    background: var(--credit-bg);
+    border: 1px solid var(--credit-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .src.pool { border-style: dashed; border-color: var(--blue); }
+  .src .s-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--blue-dark); margin-bottom: 5px;
+  }
+  .src .s-val { font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 600; }
+  .src .s-sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .converge { display: block; width: 100%; height: 42px; }
+  .pot {
+    background: var(--ink); color: #EDF2F5;
+    border-radius: 8px; padding: 16px 20px;
+    text-align: center; max-width: 420px; margin: 0 auto;
+  }
+  .pot .p-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #8FA3B0; margin-bottom: 4px;
+  }
+  .pot .p-val { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600; }
+  .pot .p-sub { font-size: 11.5px; color: #8FA3B0; margin-top: 3px; }
+  .vert-conn { width: 2px; height: 26px; background: var(--rail); margin: 0 auto; position: relative; }
+  .vert-conn::after {
+    content: '';
+    position: absolute; bottom: -1px; left: -3px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid var(--rail);
+  }
+  .gate {
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    padding: 10px 24px;
+    text-align: center;
+    max-width: 340px; margin: 0 auto;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700; font-size: 15px;
+  }
+  .gate .g-sub { display: block; font-family: 'Inter', sans-serif; font-weight: 400; font-size: 11.5px; color: var(--muted); }
+  .outrow {
+    display: flex; justify-content: center; align-items: baseline; gap: 14px;
+    flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', monospace;
+    text-align: center;
+  }
+  .outrow .o { font-size: 15px; font-weight: 500; }
+  .outrow .o small { display: block; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 400; margin-bottom: 3px;}
+  .outrow .o.final { font-size: 20px; font-weight: 600; color: var(--blue-dark); }
+  .outrow .osym { color: var(--rail); font-size: 16px; }
+  .keybox {
+    margin-top: 22px;
+    background: #FDF6F0;
+    border: 1px solid #EBD6C3;
+    border-left: 3px solid var(--red);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  .keybox strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- pool ladder ---------- */
+  .pool-card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 26px; }
+  .ladder { margin: 4px 0 10px; }
+  .rung {
+    display: grid;
+    grid-template-columns: 52px 1fr 250px;
+    align-items: center;
+    gap: 14px;
+    padding: 9px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .rung:last-child { border-bottom: none; }
+  .rung .fi { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 15px; }
+  .bar-track { height: 14px; background: #EDF1F4; border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--blue); border-radius: 3px; }
+  .rung .val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--muted);
+    text-align: right; white-space: nowrap;
+  }
+  .pool-notes { margin-top: 16px; display: grid; gap: 8px; }
+  .pool-notes li { list-style: none; color: var(--muted); font-size: 13.5px; padding-left: 18px; position: relative; }
+  .pool-notes li::before { content: '·'; position: absolute; left: 4px; color: var(--blue-dark); font-weight: 700; }
+  .pool-notes strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- glide path ---------- */
+  .glide {
+    margin-top: 22px;
+    border-top: 1px dashed var(--line);
+    padding-top: 20px;
+  }
+  .glide-title {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700; font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .glide-sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; max-width: 560px; }
+  .glide-chart {
+    display: flex; align-items: flex-end; gap: 10px;
+    height: 110px; max-width: 420px;
+  }
+  .gbar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; text-align: center; }
+  .gbar .gfill {
+    background: var(--blue);
+    border-radius: 4px 4px 0 0;
+  }
+  .gbar.pre .gfill { background: #B9CCD8; }
+  .gbar .gnum {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 600; margin-bottom: 4px;
+  }
+  .gbar .glab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px; color: var(--muted); margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- calculator ---------- */
+  .calc {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+  }
+  .calc-controls { padding: 26px; }
+  .ctl { margin-bottom: 20px; }
+  .ctl-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+  .ctl-head label { font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 13.5px; }
+  .ctl-head .ctl-val { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; color: var(--blue-dark); }
+  input[type="range"] {
+    width: 100%; -webkit-appearance: none; appearance: none;
+    height: 6px; border-radius: 3px; background: #E2E9EE; outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--blue-dark); border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(16,31,44,.3); cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--blue-dark); border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(16,31,44,.3); cursor: pointer;
+  }
+  .fi-btns { display: flex; gap: 8px; }
+  .fi-btn {
+    flex: 1;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700; font-size: 13px;
+    padding: 8px 0;
+    background: #F0F3F5;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all .12s;
+  }
+  .fi-btn:hover { border-color: var(--blue); color: var(--blue-dark); }
+  .fi-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .ctl-note { font-size: 11.5px; color: #9AA8B1; margin-top: 6px; font-family: 'IBM Plex Mono', monospace; }
+  .assump-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted);
+    margin: 26px 0 14px;
+    border-top: 1px dashed var(--line);
+    padding-top: 16px;
+  }
+
+  .calc-out {
+    background: var(--ink);
+    color: #EDF2F5;
+    padding: 26px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .orow { display: flex; justify-content: space-between; align-items: baseline; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .orow .ok { color: #8FA3B0; font-size: 10.5px; }
+  .orow .ov { font-weight: 500; }
+  .orow.strong { border-top: 1px solid #2A3B48; padding-top: 9px; }
+  .orow.strong .ok { color: #C6D2DA; }
+  .orow.allin .ov { color: #FFFFFF; font-size: 14px; font-weight: 600; }
+  .bonus-block { margin-top: auto; border-top: 2px solid #4FB6E8; padding-top: 14px; }
+  .bonus-block .b-lab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #8FA3B0; margin-bottom: 4px;
+  }
+  .bonus-block .b-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px; font-weight: 600; color: #4FB6E8;
+    white-space: nowrap;
+  }
+  .bonus-block .b-num.negative { color: #E8836B; }
+  .status-chip {
+    margin-top: 10px;
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.08em;
+    padding: 5px 10px; border-radius: 4px;
+  }
+  .status-chip.ok { background: #12384D; color: #7FCBEE; }
+  .status-chip.flag { background: #46201A; color: #F0A18E; }
+  .status-chip.vest { background: #3D3419; color: #E8D084; }
+  .vest-detail { margin-top: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #8FA3B0; line-height: 1.6; }
+
+  /* ---------- recon ---------- */
+  .recon { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 26px 28px; overflow-x: auto; }
+  .recon-table { width: 100%; border-collapse: collapse; }
+  .recon-table td { padding: 11px 0; border-bottom: 1px solid #EEF2F4; font-size: 14px; vertical-align: top; }
+  .recon-table td.amt {
+    font-family: 'IBM Plex Mono', monospace;
+    text-align: right; font-weight: 500;
+    white-space: nowrap; padding-left: 20px;
+  }
+  .recon-table td .sub { color: var(--muted); font-size: 12.5px; display: block; margin-top: 2px; }
+  .recon-table td.amt .cr { display: block; font-size: 9.5px; color: #9AA8B1; letter-spacing: 0.1em; text-transform: uppercase; }
+  .recon-table tr.allin td { font-weight: 600; }
+  .recon-table tr.allin td.amt { font-size: 16px; }
+  .recon-table tr.total td { border-bottom: none; border-top: 2px solid var(--ink); padding-top: 13px; font-weight: 600; }
+  .recon-table tr.total td.amt { font-size: 18px; color: var(--blue-dark); font-weight: 600; }
+  .recon-table tr.vesting td {
+    border-bottom: none; padding-top: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--muted); text-align: right;
+  }
+  .recon-table tr.vesting td:first-child { text-align: left; }
+  .amt.neg { color: var(--red); }
+
+  /* ---------- edge rules ---------- */
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .rule {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--red);
+    border-radius: 8px;
+    padding: 20px 22px;
+  }
+  .rule.up { border-top-color: var(--blue); }
+  .rule h4 { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 7px; }
+  .rule p { color: var(--muted); font-size: 13.5px; }
+  .rule p strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- insights ---------- */
+  .insights { display: grid; gap: 12px; }
+  .insight {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 18px;
+    align-items: center;
+  }
+  .insight .big { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 20px; color: var(--blue-dark); }
+  .insight p { color: var(--muted); font-size: 13.5px; }
+  .insight p strong { color: var(--ink); font-weight: 600; }
+
+  .readnote { margin-top: 40px; border-left: 3px solid var(--ink); padding: 4px 0 4px 18px; }
+  .readnote .rn-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .readnote p { font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 17px; line-height: 1.45; max-width: 680px; }
+  .fineprint { margin-top: 28px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #93A1AB; line-height: 1.7; }
+
+  @media (max-width: 700px) {
+    .stage { grid-template-columns: 1fr; }
+    .stage-ledger { border-left: none; border-top: 1px solid var(--line); }
+    .rules { grid-template-columns: 1fr; }
+    .rung { grid-template-columns: 42px 1fr; }
+    .rung .val { grid-column: 2; text-align: left; margin-top: 2px; }
+    .hero-arrow { display: none; }
+    .insight { grid-template-columns: 1fr; gap: 6px; }
+    .calc { grid-template-columns: 1fr; }
+    .flow-sources { grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; }
+    .converge { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Oliver Wyman · Partner Compensation Mechanics</div>
+  <h1>Where the money goes</h1>
+  <p class="lede">How $2M of SCR becomes a partner's all-in compensation and bonus. One process, one pot of credits, one multiplier at the end.</p>
+
+  <div class="hero-ledger">
+    <div class="hero-item">
+      <div class="lab">SCR</div>
+      <div class="num">$2,000,000</div>
+    </div>
+    <div class="hero-arrow">&rarr;</div>
+    <div class="hero-item">
+      <div class="lab">All-In Comp</div>
+      <div class="num">~$580,000</div>
+    </div>
+    <div class="hero-arrow">&rarr;</div>
+    <div class="hero-item">
+      <div class="lab">Bonus</div>
+      <div class="num blue">~$226,000</div>
+    </div>
+  </div>
+  <div class="hero-note">FI1 worked example at an 80% multiplier. The draw is paid through the year, the bonus settles the difference.</div>
+
+  <!-- =============== PIPELINE =============== -->
+  <div class="sec-title">The pipeline</div>
+  <p class="sec-sub">Three steps between the client signing and credits landing in your name. Identical for every partner regardless of seniority.</p>
+
+  <div class="stage">
+    <div class="stage-body">
+      <div class="stage-tag">Step 1 · Splits &amp; SCR</div>
+      <h3>The code holder decides</h3>
+      <p>When a project sells, revenue is split among partners on the code. <strong>The code holder proposes, everyone else negotiates.</strong> Splits are set at the start and can be revised ex-post. Your share becomes your SCR, Single Count Revenue. $2M of SCR means roughly $4M of sold work at 50% splits.</p>
+    </div>
+    <div class="stage-ledger">
+      <div class="lrow"><span class="k">Projects sold</span><span class="v">$4,000,000</span></div>
+      <div class="lrow"><span class="k">Your splits</span><span class="v">50%</span></div>
+      <div class="lrow result"><span class="k">SCR</span><span class="v">$2,000,000</span></div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <div class="stage">
+    <div class="stage-body">
+      <div class="stage-tag">Step 2 · PVA</div>
+      <h3>Profitability, not revenue</h3>
+      <p>SCR converts to PVA based on project profitability. <strong>Around 40% is typical.</strong> This is the number that actually feeds your credits.</p>
+    </div>
+    <div class="stage-ledger">
+      <div class="lrow"><span class="k">SCR</span><span class="v">$2,000,000</span></div>
+      <div class="lrow"><span class="k">Profitability</span><span class="v">&times; 40%</span></div>
+      <div class="lrow result"><span class="k">PVA</span><span class="v">$800,000</span></div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <div class="stage">
+    <div class="stage-body">
+      <div class="stage-tag">Step 3 · The 50/50</div>
+      <h3>Half yours, half the pool's</h3>
+      <p>PVA splits evenly. Half stays with you as <strong>personal credits</strong>. Half funds the <strong>partner pool</strong>, which redistributes by seniority. Credits are an internal unit, not dollars. Nothing becomes money until the very end.</p>
+    </div>
+    <div class="stage-ledger">
+      <div class="lrow"><span class="k">PVA</span><span class="v">$800,000</span></div>
+      <div class="lrow"><span class="k">Funds pool</span><span class="v">400K</span></div>
+      <div class="lrow result"><span class="k">Your credits</span><span class="v">400K cr</span></div>
+    </div>
+  </div>
+
+  <!-- =============== CREDIT ACCOUNT SCHEMATIC =============== -->
+  <div class="sec-title">The credit account</div>
+  <p class="sec-sub">Three streams converge into one pot of credits. The multiplier converts the whole pot into dollars at year end. FI1 numbers shown.</p>
+
+  <div class="schematic">
+    <div class="flow-sources">
+      <div class="src">
+        <div class="s-tag">Personal Credits</div>
+        <div class="s-val">400K cr</div>
+        <div class="s-sub">Your half of PVA. Moves with your selling.</div>
+      </div>
+      <div class="src">
+        <div class="s-tag">Billed Days</div>
+        <div class="s-val">0 cr</div>
+        <div class="s-sub">Usually zero. Settled through splits instead.</div>
+      </div>
+      <div class="src pool">
+        <div class="s-tag">Pool Credits</div>
+        <div class="s-val">~325K cr</div>
+        <div class="s-sub">Set by FI level and firm performance, not by you.</div>
+      </div>
+    </div>
+    <svg class="converge" viewBox="0 0 300 42" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M50,2 C50,28 150,16 150,42" fill="none" stroke="#C3CDD4" stroke-width="2"/>
+      <path d="M150,2 L150,42" fill="none" stroke="#C3CDD4" stroke-width="2"/>
+      <path d="M250,2 C250,28 150,16 150,42" fill="none" stroke="#C3CDD4" stroke-width="2"/>
+    </svg>
+    <div class="pot">
+      <div class="p-tag">One Credit Account</div>
+      <div class="p-val">725K credits</div>
+      <div class="p-sub">Credits are not money yet</div>
+    </div>
+    <div class="vert-conn"></div>
+    <div class="gate">&times; Multiplier, 60-90%<span class="g-sub">One factor, applied to everything. Pool included.</span></div>
+    <div class="vert-conn"></div>
+    <div class="outrow">
+      <div class="o"><small>All-In Comp</small>$580,000</div>
+      <div class="osym">&minus;</div>
+      <div class="o"><small>Draw Already Paid ~AED 1.3M</small>$354,000</div>
+      <div class="osym">=</div>
+      <div class="o final"><small>Bonus</small>~$226,000</div>
+    </div>
+    <div class="keybox">
+      <strong>The detail that changes everything.</strong> The pool distributes credits, not dollars. So the year-end multiplier is not a haircut on your personal selling. It taxes your entire compensation, pool draw included. All-in comp equals total credits times the multiplier. The bonus is simply all-in minus what was already paid as draw.
+    </div>
+  </div>
+
+  <!-- =============== POOL =============== -->
+  <div class="sec-title">The pool and the FI ladder</div>
+  <p class="sec-sub">A separate calculation, and the real payout mechanism. Distributions are weighted by FI units, the partner seniority ladder. Pool credits shown assume ~325K at FI1.</p>
+
+  <div class="pool-card">
+    <div class="ladder">
+      <div class="rung">
+        <span class="fi">FI1</span>
+        <div class="bar-track"><div class="bar-fill" style="width:17%"></div></div>
+        <span class="val">30 units &middot; ~325K credits</span>
+      </div>
+      <div class="rung">
+        <span class="fi">FI2</span>
+        <div class="bar-track"><div class="bar-fill" style="width:25%"></div></div>
+        <span class="val">45 units &middot; ~490K credits</span>
+      </div>
+      <div class="rung">
+        <span class="fi">FI3</span>
+        <div class="bar-track"><div class="bar-fill" style="width:50%"></div></div>
+        <span class="val">90 units &middot; ~975K credits</span>
+      </div>
+      <div class="rung">
+        <span class="fi">FI4</span>
+        <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
+        <span class="val">135 units &middot; ~1.46M credits</span>
+      </div>
+      <div class="rung">
+        <span class="fi">FI5</span>
+        <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+        <span class="val">180 units &middot; ~1.95M credits</span>
+      </div>
+    </div>
+    <ul class="pool-notes">
+      <li>An FI1 draws <strong>17 cents on the dollar</strong> versus an FI5 (30 vs 180 units). The ladder is 6x from bottom to top.</li>
+      <li>The ladder is not linear. FI1 to FI2 adds 15 units. <strong>FI2 to FI3 doubles you</strong>, adding 45. The mid-ladder promotions are where the money is.</li>
+      <li>The credits you receive vary with <strong>region, practice and global mix</strong>, not your own contribution. Selling more does not raise your own pool draw.</li>
+    </ul>
+
+    <div class="glide">
+      <div class="glide-title">The glide path</div>
+      <div class="glide-sub">Promotions do not pay immediately. You sit a minimum of ~2 years in a bracket, and when promoted, the new units phase in over several years. FI1 to FI2 shown.</div>
+      <div class="glide-chart">
+        <div class="gbar pre">
+          <div class="gnum">30</div>
+          <div class="gfill" style="height:47%"></div>
+          <div class="glab">FI1</div>
+        </div>
+        <div class="gbar">
+          <div class="gnum">35</div>
+          <div class="gfill" style="height:58%"></div>
+          <div class="glab">Promoted</div>
+        </div>
+        <div class="gbar">
+          <div class="gnum">40</div>
+          <div class="gfill" style="height:70%"></div>
+          <div class="glab">+1 yr</div>
+        </div>
+        <div class="gbar">
+          <div class="gnum">45</div>
+          <div class="gfill" style="height:82%"></div>
+          <div class="glab">+2 yrs · full FI2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============== CALCULATOR =============== -->
+  <div class="sec-title">Run the numbers yourself</div>
+  <p class="sec-sub">Drag the sliders. Notice what moves and what doesn't. The pool line never responds to your selling.</p>
+
+  <div class="calc">
+    <div class="calc-controls">
+      <div class="ctl">
+        <div class="ctl-head">
+          <label for="scr">Your SCR</label>
+          <span class="ctl-val" id="scrVal">$2,000,000</span>
+        </div>
+        <input type="range" id="scr" min="0" max="6000000" step="50000" value="2000000">
+      </div>
+      <div class="ctl">
+        <div class="ctl-head">
+          <label>FI level</label>
+          <span class="ctl-val" id="fiVal">FI1</span>
+        </div>
+        <div class="fi-btns" id="fiBtns">
+          <button class="fi-btn active" data-fi="0">FI1</button>
+          <button class="fi-btn" data-fi="1">FI2</button>
+          <button class="fi-btn" data-fi="2">FI3</button>
+          <button class="fi-btn" data-fi="3">FI4</button>
+          <button class="fi-btn" data-fi="4">FI5</button>
+        </div>
+        <div class="ctl-note">Units 30 / 45 / 90 / 135 / 180. Glide paths ignored, full bracket value shown.</div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-head">
+          <label for="mult">Year-end multiplier</label>
+          <span class="ctl-val" id="multVal">80%</span>
+        </div>
+        <input type="range" id="mult" min="60" max="90" step="1" value="80">
+        <div class="ctl-note">80% is a good year. Europe often runs near 60%.</div>
+      </div>
+
+      <div class="assump-title">Assumptions</div>
+      <div class="ctl">
+        <div class="ctl-head">
+          <label for="pva">PVA rate</label>
+          <span class="ctl-val" id="pvaVal">40%</span>
+        </div>
+        <input type="range" id="pva" min="30" max="50" step="1" value="40">
+      </div>
+      <div class="ctl">
+        <div class="ctl-head">
+          <label for="poolBase">FI1 pool credits</label>
+          <span class="ctl-val" id="poolBaseVal">325K</span>
+        </div>
+        <input type="range" id="poolBase" min="300000" max="350000" step="5000" value="325000">
+        <div class="ctl-note">Range ~300-350K. Higher FI levels scale by units.</div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-head">
+          <label for="draw">Annual draw</label>
+          <span class="ctl-val" id="drawVal">$354,000</span>
+        </div>
+        <input type="range" id="draw" min="300000" max="450000" step="2000" value="354000">
+      </div>
+    </div>
+
+    <div class="calc-out">
+      <div class="orow"><span class="ok">Personal credits</span><span class="ov" id="oPersonal">400K cr</span></div>
+      <div class="orow"><span class="ok">Pool credits</span><span class="ov" id="oPool">325K cr</span></div>
+      <div class="orow strong"><span class="ok">Total credits</span><span class="ov" id="oTotal">725K cr</span></div>
+      <div class="orow"><span class="ok">&times; Multiplier</span><span class="ov" id="oMult">80%</span></div>
+      <div class="orow strong allin"><span class="ok">All-in comp ($)</span><span class="ov" id="oAllin">$580,000</span></div>
+      <div class="orow"><span class="ok">&minus; Draw already paid</span><span class="ov" id="oDraw">$354,000</span></div>
+      <div class="bonus-block">
+        <div class="b-lab">Bonus</div>
+        <div class="b-num" id="oBonus">~$226,000</div>
+        <span class="status-chip ok" id="oStatus">CLEAN YEAR</span>
+        <div class="vest-detail" id="oVest"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============== RECONCILIATION =============== -->
+  <div class="sec-title">Year-end reconciliation</div>
+  <p class="sec-sub">The full process on one page. FI1, $2M SCR, 80% multiplier.</p>
+
+  <div class="recon">
+    <table class="recon-table">
+      <tr>
+        <td>Personal credits <span class="sub">Half of $800K PVA</span></td>
+        <td class="amt">400K <span class="cr">credits</span></td>
+      </tr>
+      <tr>
+        <td>Pool credits <span class="sub">30 units at FI1, set by region and firm performance</span></td>
+        <td class="amt">~325K <span class="cr">credits</span></td>
+      </tr>
+      <tr>
+        <td>Total credit account <span class="sub">One pot, one multiplier</span></td>
+        <td class="amt">725K <span class="cr">credits</span></td>
+      </tr>
+      <tr class="allin">
+        <td>All-in compensation <span class="sub">725K credits &times; 80% multiplier</span></td>
+        <td class="amt">$580,000</td>
+      </tr>
+      <tr>
+        <td>Draw already paid <span class="sub">Salary, MECA, insurance, flights &middot; ~AED 1.3M</span></td>
+        <td class="amt neg">&minus; $354,000</td>
+      </tr>
+      <tr class="total">
+        <td>Bonus</td>
+        <td class="amt">~$226,000</td>
+      </tr>
+      <tr class="vesting">
+        <td>Cash treatment</td>
+        <td>all cash, same year (under the $750K threshold)</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- =============== EDGE RULES =============== -->
+  <div class="sec-title">Two rules at the edges</div>
+  <p class="sec-sub">What happens when the number is very bad or very good.</p>
+
+  <div class="rules">
+    <div class="rule">
+      <h4>If the result is negative</h4>
+      <p>No bonus, and a <strong>formal flag</strong>. A partner-level PIP follows. You make up the shortfall within <strong>1 to 2 years or you are out</strong>. Sometimes the exit is immediate.</p>
+    </div>
+    <div class="rule up">
+      <h4>If the bonus exceeds ~$750K</h4>
+      <p>The excess <strong>vests over 3 years</strong>. Roughly one third is paid the same year, the rest over the next two. It can be <strong>forfeited on exit</strong> unless a payout is negotiated.</p>
+    </div>
+  </div>
+
+  <!-- =============== SMART READ =============== -->
+  <div class="sec-title">The smart read</div>
+  <p class="sec-sub">The numbers that explain how the process actually behaves.</p>
+
+  <div class="insights">
+    <div class="insight">
+      <span class="big">16&cent;</span>
+      <p><strong>Your marginal take rate on SCR.</strong> Each extra dollar of SCR converts at 40% profitability, is halved into the pool, then multiplied at 80%. Selling $1 earns you 16 cents of bonus, in a good year.</p>
+    </div>
+    <div class="insight">
+      <span class="big">~$590K</span>
+      <p><strong>The survival line, and it moves.</strong> At an 80% multiplier an FI1 needs about $590K of SCR to clear the draw. At a 60% multiplier the same line jumps to roughly $1.33M. The firm's year decides how hard your year has to be.</p>
+    </div>
+    <div class="insight">
+      <span class="big">&minus;40%</span>
+      <p><strong>The multiplier taxes everything.</strong> Because pool distributions are credits, a Europe-style 60% year hits your entire comp, pool included. The same 725K credits pay ~$226K of bonus in an 80% region and ~$81K in a 60% one. Geography is a comp decision.</p>
+    </div>
+  </div>
+
+  <!-- =============== THE LADDER, EXPLAINED =============== -->
+  <div class="sec-title">The ladder, explained</div>
+  <p class="sec-sub">Why the FI structure, not the pipeline, is where partner wealth is actually built.</p>
+
+  <div class="insights">
+    <div class="insight">
+      <span class="big">~$8.7K</span>
+      <p><strong>What one FI unit is worth.</strong> At ~325K credits for 30 units, each unit is roughly 10.8K credits, or about $8.7K of annual comp at an 80% multiplier. Every promotion is just units, and every unit is an annuity.</p>
+    </div>
+    <div class="insight">
+      <span class="big">+$390K/yr</span>
+      <p><strong>The money promotion.</strong> FI1 to FI2 adds 15 units, worth roughly $130K per year at maturity. FI2 to FI3 adds 45 units, roughly $390K per year. The ladder is back-loaded, and so is the incentive to stay.</p>
+    </div>
+    <div class="insight">
+      <span class="big">10-20 yrs</span>
+      <p><strong>The glide path makes it slower than it looks.</strong> A minimum of ~2 years per bracket, promotions dependent on your sponsoring senior partner, and each step phasing in gradually (30, 35, 40, 45). The system is engineered so seniority compounds slowly and cannot be shortcut by selling.</p>
+    </div>
+    <div class="insight">
+      <span class="big">17&cent;</span>
+      <p><strong>The bottom of the ladder funds the top.</strong> An FI1 draws 17 cents on the dollar of an FI5's pool share. And because everyone contributes half their PVA regardless of level, junior partners' selling subsidizes senior partners' draws until they climb high enough to be on the receiving side.</p>
+    </div>
+  </div>
+
+  <div class="readnote">
+    <div class="rn-tag">How to read the system</div>
+    <p>The pipeline is a qualifier, the pool is the payout, and the multiplier is a firm-wide tax on both. Selling keeps your seat. Units make you rich. And units only come with time, sponsorship and patience, by design.</p>
+  </div>
+
+  <div class="fineprint">
+    Worked example only. Assumes 50% splits, 40% PVA, 80% multiplier, FI1 pool distribution of ~325K credits (range 300-350K), higher levels scaled by FI units (30 / 45 / 90 / 135 / 180), glide paths shown at full bracket value. Pool distributions vary with region, practice and global performance, not personal contribution. Unit values derived, indicative. All figures indicative.
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var ok = sessionStorage.getItem('cg') === '1';
+  if (!ok) {
+    var pin = prompt('Enter access PIN');
+    if (pin === 'OW2026') {
+      sessionStorage.setItem('cg', '1');
+    } else {
+      document.body.innerHTML = '<div style="font-family:monospace;padding:60px 24px;color:#5C6B76">Access denied.</div>';
+      return;
+    }
+  }
+})();
+(function () {
+  var fiUnits = [30, 45, 90, 135, 180];
+  var fiNames = ['FI1', 'FI2', 'FI3', 'FI4', 'FI5'];
+  var state = { scr: 2000000, fi: 0, mult: 80, pva: 40, poolBase: 325000, draw: 354000 };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function fmtUSD(n) {
+    var sign = n < 0 ? '-' : '';
+    return sign + '$' + Math.round(Math.abs(n)).toLocaleString('en-US');
+  }
+  function fmtCr(n) {
+    return Math.round(n / 1000).toLocaleString('en-US') + 'K cr';
+  }
+
+  function recalc() {
+    var personal = state.scr * (state.pva / 100) * 0.5;
+    var pool = state.poolBase * (fiUnits[state.fi] / fiUnits[0]);
+    var total = personal + pool;
+    var allin = total * (state.mult / 100);
+    var bonus = allin - state.draw;
+
+    $('scrVal').textContent = fmtUSD(state.scr);
+    $('fiVal').textContent = fiNames[state.fi] + ' · ' + fiUnits[state.fi] + ' units';
+    $('multVal').textContent = state.mult + '%';
+    $('pvaVal').textContent = state.pva + '%';
+    $('poolBaseVal').textContent = Math.round(state.poolBase / 1000) + 'K';
+    $('drawVal').textContent = fmtUSD(state.draw);
+
+    $('oPersonal').textContent = fmtCr(personal);
+    $('oPool').textContent = fmtCr(pool);
+    $('oTotal').textContent = fmtCr(total);
+    $('oMult').textContent = state.mult + '%';
+    $('oAllin').textContent = fmtUSD(allin);
+    $('oDraw').textContent = fmtUSD(state.draw);
+
+    var bonusEl = $('oBonus');
+    var statusEl = $('oStatus');
+    var vestEl = $('oVest');
+    bonusEl.textContent = (bonus < 0 ? '' : '~') + fmtUSD(bonus);
+    bonusEl.classList.toggle('negative', bonus < 0);
+
+    if (bonus < 0) {
+      statusEl.className = 'status-chip flag';
+      statusEl.textContent = 'FLAGGED · NO BONUS · PARTNER PIP';
+      vestEl.textContent = 'Shortfall must be recovered within 1-2 years.';
+    } else if (bonus > 750000) {
+      var excess = bonus - 750000;
+      var now = 750000 + excess / 3;
+      var deferred = excess * 2 / 3;
+      statusEl.className = 'status-chip vest';
+      statusEl.textContent = 'VESTING TRIGGERED · ABOVE $750K';
+      vestEl.textContent = 'Cash now ' + fmtUSD(now) + ' · ' + fmtUSD(deferred) + ' vests over 2 years.';
+    } else {
+      statusEl.className = 'status-chip ok';
+      statusEl.textContent = 'CLEAN YEAR · ALL CASH';
+      vestEl.textContent = '';
+    }
+  }
+
+  $('scr').addEventListener('input', function () { state.scr = +this.value; recalc(); });
+  $('mult').addEventListener('input', function () { state.mult = +this.value; recalc(); });
+  $('pva').addEventListener('input', function () { state.pva = +this.value; recalc(); });
+  $('poolBase').addEventListener('input', function () { state.poolBase = +this.value; recalc(); });
+  $('draw').addEventListener('input', function () { state.draw = +this.value; recalc(); });
+
+  var btns = document.querySelectorAll('.fi-btn');
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      btns.forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      state.fi = +b.getAttribute('data-fi');
+      recalc();
+    });
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>
