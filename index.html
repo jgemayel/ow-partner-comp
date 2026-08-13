@@ -465,6 +465,20 @@
   .sf .sf-note { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
   @media (max-width: 520px) { .seg .sg-name { display: none; } .sf .sf-note { display: none; } }
 
+  /* ---------- sensitivity grid ---------- */
+  .sens-card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 24px; overflow-x: auto; }
+  .sens-table { border-collapse: collapse; width: 100%; min-width: 560px; font-family: 'IBM Plex Mono', monospace; }
+  .sens-table th, .sens-table td { padding: 8px 6px; text-align: center; font-size: 12px; border: 1px solid #EDF1F4; }
+  .sens-table th { background: #F0F3F5; font-weight: 600; font-size: 11px; color: var(--ink); white-space: nowrap; }
+  .sens-table td.neg { background: #F6DCD5; color: #8F3A28; }
+  .sens-table td.warn { background: #FBEED6; color: #7A5B14; }
+  .sens-table td.ok { background: #EAF3FA; color: var(--blue-dark); }
+  .sens-table td.vest { background: #CFE7F5; color: var(--ink); font-weight: 600; }
+  .sens-table td.cur { outline: 2px solid var(--ink); outline-offset: -2px; }
+  .sens-legend { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--muted); }
+  .sens-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sens-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
   .readnote { margin-top: 40px; border-left: 3px solid var(--ink); padding: 4px 0 4px 18px; }
   .readnote .rn-tag {
     font-family: 'IBM Plex Mono', monospace;
@@ -535,7 +549,7 @@
     <div class="stage-body">
       <div class="stage-tag">Step 2 · PVA</div>
       <h3>Profitability, not revenue</h3>
-      <p>PVA is computed in the costing tool as <strong>net revenue (invoiced minus pass-through expenses), minus an 18% net revenue charge to the firm, minus execution charges</strong>, the team's time at internal cost rates &times; 50% (only 20% for DI/VP levels). So PVA margin = 82% minus execution charges over net revenue, and 82% is its theoretical ceiling. Historical quintiles run 55 / 50 / 45 / 37, pricing targets 36%, so ~40% is a fair working number.</p>
+      <p>Assume a typical project, no contractors or pass-throughs, so invoiced fees equal net revenue, and that is what SCR measures here. PVA = <strong>net revenue, minus an 18% net revenue charge to the firm, minus execution charges</strong>, the team's time at internal cost rates &times; 50% (20% for DI/VP levels). So PVA margin = 82% minus execution charges over net revenue, with 82% as the ceiling. Historical quintiles run 55 / 50 / 45 / 37, pricing targets 36%, ~40% is a fair working number.</p>
     </div>
     <div class="stage-ledger">
       <div class="lrow"><span class="k">SCR (net revenue)</span><span class="v">$2,000,000</span></div>
@@ -730,6 +744,7 @@
           <span class="ctl-val" id="drawVal">$354,000</span>
         </div>
         <input type="range" id="draw" min="300000" max="450000" step="2000" value="354000">
+        <div class="ctl-note">Base salary ~AED 1M (FI1) + MECA ~AED 350K + flights $2-3K + insurance $5-10K. Roughly AED 1.3-1.4M all in.</div>
       </div>
     </div>
 
@@ -748,6 +763,19 @@
         <span class="status-chip ok" id="oStatus">CLEAN YEAR</span>
         <div class="vest-detail" id="oVest"></div>
       </div>
+    </div>
+  </div>
+
+  <div class="sec-title">Sensitivities, PVA vs SCR</div>
+  <p class="sec-sub">Bonus in $K across PVA margins and SCR, where SCR means net revenue (no contractors). The grid reprices live off the multiplier, FI level, pool and draw settings above.</p>
+
+  <div class="sens-card">
+    <table class="sens-table" id="sensTable"></table>
+    <div class="sens-legend">
+      <span><i style="background:#F6DCD5"></i>Negative, flagged</span>
+      <span><i style="background:#FBEED6"></i>Positive but below survival</span>
+      <span><i style="background:#EAF3FA"></i>Clean</span>
+      <span><i style="background:#CFE7F5"></i>Vesting, above $750K</span>
     </div>
   </div>
 
@@ -890,7 +918,7 @@
   </div>
 
   <div class="fineprint">
-    Worked example only. Assumes 50% splits, 40% PVA, 80% multiplier, FI1 pool distribution of ~325K credits (range 300-350K), higher levels scaled by FI units (30 / 45 / 90 / 135 / 180), glide paths shown at full bracket value. Pool distributions vary with region, practice and global performance, not personal contribution. Unit values derived, indicative. Survival modeled as own project credits at full value (before the 50/50 split, pool excluded) times the multiplier covering the draw. PVA mechanics per the OW costing tool. DPC Investment Credits for investment-flagged phases exist but are excluded here. All figures indicative.
+    Worked example only. Assumes no contractor or expense pass-throughs (so invoiced = net revenue = SCR), 50% splits, 40% PVA, 80% multiplier, FI1 pool distribution of ~325K credits (range 300-350K), higher levels scaled by FI units (30 / 45 / 90 / 135 / 180), glide paths shown at full bracket value. Pool distributions vary with region, practice and global performance, not personal contribution. Unit values derived, indicative. Survival modeled as own project credits at full value (before the 50/50 split, pool excluded) times the multiplier covering the draw. PVA mechanics per the OW costing tool. DPC Investment Credits for investment-flagged phases exist but are excluded here. All figures indicative.
   </div>
 
 </div>
@@ -921,6 +949,37 @@
   }
   function fmtCr(n) {
     return Math.round(n / 1000).toLocaleString('en-US') + 'K cr';
+  }
+
+  var sensScr = [500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000];
+  var sensPva = [55, 45, 40, 37, 30, 20];
+
+  function buildSens() {
+    var tbl = $('sensTable');
+    if (!tbl) return;
+    var mult = state.mult / 100;
+    var pool = state.poolBase * (fiUnits[state.fi] / fiUnits[0]);
+    var ci = 0, cbest = Infinity;
+    sensScr.forEach(function (sv, i) { var d = Math.abs(sv - state.scr); if (d < cbest) { cbest = d; ci = i; } });
+    var ri = 0, rbest = Infinity;
+    sensPva.forEach(function (pv, i) { var d = Math.abs(pv - state.pva); if (d < rbest) { rbest = d; ri = i; } });
+
+    var html = '<tr><th>PVA \\ SCR</th>';
+    sensScr.forEach(function (sv) { html += '<th>$' + (sv / 1000000) + 'M</th>'; });
+    html += '</tr>';
+    sensPva.forEach(function (pv, r) {
+      html += '<tr><th>' + pv + '%</th>';
+      sensScr.forEach(function (sv, c) {
+        var personal = sv * (pv / 100) * 0.5;
+        var bonus = (personal + pool) * mult - state.draw;
+        var own = sv * (pv / 100) * mult;
+        var cls = bonus < 0 ? 'neg' : (own < state.draw ? 'warn' : (bonus > 750000 ? 'vest' : 'ok'));
+        if (r === ri && c === ci) cls += ' cur';
+        html += '<td class="' + cls + '">' + Math.round(bonus / 1000) + '</td>';
+      });
+      html += '</tr>';
+    });
+    tbl.innerHTML = html;
   }
 
   function recalc() {
@@ -957,6 +1016,8 @@
     var vestEl = $('oVest');
     bonusEl.textContent = (bonus < 0 ? '' : '~') + fmtUSD(bonus);
     bonusEl.classList.toggle('negative', bonus < 0);
+
+    buildSens();
 
     if (bonus < 0) {
       statusEl.className = 'status-chip flag';
